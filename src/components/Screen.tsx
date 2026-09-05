@@ -8,7 +8,12 @@ export function Screen({ children }: { children: React.ReactNode }) {
   const { colors } = useApp();
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         {children}
       </ScrollView>
     </SafeAreaView>
@@ -30,7 +35,8 @@ export function PageHeader({ title, subtitle }: { title: string; subtitle?: stri
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
-  content: { padding: 20, paddingBottom: 36 },
+  scroll: { flex: 1 },
+  content: { flexGrow: 1, padding: 20, paddingBottom: 120 },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   headerCopy: { marginLeft: 13 },
   title: { fontSize: 25, fontWeight: '800' },

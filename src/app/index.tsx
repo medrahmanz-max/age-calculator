@@ -1,8 +1,8 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { InfoCard } from '@/components/InfoCard';
+import { DateInput } from '@/components/DateInput';
 import { PageHeader, Screen } from '@/components/Screen';
 import { useApp } from '@/context/AppContext';
 import { calculateAge } from '@/utils/ageCalculator';
@@ -10,10 +10,7 @@ import { calculateAge } from '@/utils/ageCalculator';
 export default function HomeScreen() {
   const { colors, latestResult, calculate, clearLatestResult } = useApp();
   const [birthDate, setBirthDate] = useState(new Date(2000, 0, 1));
-  const [showPicker, setShowPicker] = useState(false);
   const [message, setMessage] = useState('');
-
-  const formattedDate = birthDate.toLocaleDateString('en-GB');
 
   const handleCalculate = () => {
     if (birthDate > new Date()) {
@@ -30,35 +27,13 @@ export default function HomeScreen() {
 
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <Text style={[styles.label, { color: colors.text }]}>Date of birth</Text>
-        <Pressable
-          style={({ pressed }) => [styles.dateButton, { backgroundColor: colors.control }, pressed && styles.pressed]}
-          onPress={() => setShowPicker(true)}
-          accessibilityRole="button"
-          accessibilityLabel="Choose your date of birth"
-        >
-          <Text style={styles.emoji}>📅</Text>
-          <View style={styles.dateCopy}>
-            <Text style={[styles.smallText, { color: colors.mutedText }]}>Your birthday</Text>
-            <Text style={[styles.date, { color: colors.text }]}>{formattedDate}</Text>
-          </View>
-          <Text style={[styles.arrow, { color: colors.mutedText }]}>›</Text>
-        </Pressable>
-
-        {showPicker && (
-          <DateTimePicker
-            value={birthDate}
-            mode="date"
-            display="default"
-            maximumDate={new Date()}
-            onChange={(_event, date) => {
-              setShowPicker(false);
-              if (date) {
-                setBirthDate(date);
-                setMessage('');
-              }
-            }}
-          />
-        )}
+        <DateInput
+          value={birthDate}
+          onChange={(date) => {
+            setBirthDate(date);
+            setMessage('');
+          }}
+        />
 
         {message ? <Text style={[styles.error, { color: colors.danger }]}>{message}</Text> : null}
         <Pressable
@@ -130,12 +105,6 @@ function Metric({ value, label }: { value: number; label: string }) {
 const styles = StyleSheet.create({
   card: { borderWidth: 1, borderRadius: 22, padding: 20, marginBottom: 16 },
   label: { fontSize: 16, fontWeight: '800', marginBottom: 12 },
-  dateButton: { flexDirection: 'row', alignItems: 'center', borderRadius: 16, padding: 14, marginBottom: 16 },
-  emoji: { fontSize: 24 },
-  dateCopy: { flex: 1, marginLeft: 12 },
-  smallText: { fontSize: 12, marginBottom: 4 },
-  date: { fontSize: 17, fontWeight: '800' },
-  arrow: { fontSize: 30 },
   error: { fontSize: 13, marginBottom: 12, fontWeight: '600' },
   primaryButton: { borderRadius: 16, paddingVertical: 17, alignItems: 'center' },
   primaryText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800' },
